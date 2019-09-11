@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-class InputPage extends StatefulWidget {
+class InputsPage extends StatefulWidget {
   @override
-  _InputPageState createState() => _InputPageState();
+  _InputsPageState createState() => _InputsPageState();
 }
 
-class _InputPageState extends State<InputPage> {
+class _InputsPageState extends State<InputsPage> {
 
-  String _nombre;
-
+  String _nombre = '';
   @override
   Widget build(BuildContext context) {
 
@@ -44,11 +43,11 @@ class _InputPageState extends State<InputPage> {
         setState(() {
         _nombre = value;
         });
-      } ,
+      },
     );
   }
 
-  Widget _crearPersona() {
+    Widget _crearPersona() {
     return ListTile(
       title: Text('Nombre es $_nombre'),
     );
