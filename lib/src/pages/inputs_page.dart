@@ -9,6 +9,10 @@ class _InputsPageState extends State<InputsPage> {
 
   String _nombre = '';
   String _email = '';
+  String _fecha = '';
+
+  TextEditingController _inputFieldDateController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
 
@@ -24,6 +28,8 @@ class _InputsPageState extends State<InputsPage> {
             _crearEmail(),
             Divider(),
             _crearPassword(),
+            Divider(),
+            _crearFecha(context),           
             Divider(),
             _crearPersona()
         ],
@@ -59,7 +65,7 @@ class _InputsPageState extends State<InputsPage> {
     );
   }
 
-  _crearEmail() {
+  Widget _crearEmail() {
     return TextField(
       keyboardType: TextInputType.emailAddress,
       decoration:  InputDecoration(
@@ -79,7 +85,7 @@ class _InputsPageState extends State<InputsPage> {
     );
   }
 
-  _crearPassword() {
+  Widget _crearPassword() {
     return TextField(
       obscureText: true,
       decoration:  InputDecoration(
@@ -97,5 +103,43 @@ class _InputsPageState extends State<InputsPage> {
         });
       },
     );
+  }
+
+  Widget _crearFecha(BuildContext context) {
+    return TextField(
+      enableInteractiveSelection: false,
+      controller: _inputFieldDateController,
+      decoration:  InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20.0)
+        ),
+        hintText: 'Fecha de nacimiento de la persona',
+        labelText: 'fecha de nacimiento',
+        helperText: 'Solo es la fecha de nacimiento',
+        icon: Icon(Icons.calendar_today),
+      ),
+      onTap: (){
+        FocusScope.of(context).requestFocus(new FocusNode());
+        _selectDate(context);
+      },
+    );
+  }
+
+  _selectDate(BuildContext context) async {
+
+      DateTime picked = await showDatePicker(
+      context: context,
+      initialDate:  new DateTime.now(),
+      firstDate: new DateTime(2018),
+      lastDate: new DateTime(2025),
+    );
+
+    if(picked != null)
+    {
+      setState(() {
+       _fecha = picked.toString();
+       _inputFieldDateController.text = _fecha;        
+      });
+    }
   }
 }
