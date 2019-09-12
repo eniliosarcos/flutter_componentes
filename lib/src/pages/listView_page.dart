@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class ListaPage extends StatefulWidget {
@@ -10,6 +12,7 @@ class _ListaPageState extends State<ListaPage> {
   ScrollController _scrollController = new ScrollController();
   List<int> _numerosEnteros = new List();
   int _ultimoItem = 0;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -20,9 +23,17 @@ class _ListaPageState extends State<ListaPage> {
     _scrollController.addListener((){
       if(_scrollController.position.pixels == _scrollController.position.maxScrollExtent)
       {
-        _agregar10();
+        //_agregar10();
+        fetchdata();
       }
     });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _scrollController.dispose();
   }
 
   @override
@@ -31,7 +42,15 @@ class _ListaPageState extends State<ListaPage> {
       appBar: AppBar(
         title: Text('Listas'),
       ),
-      body: _crearListas(),
+      body: Stack(
+        children: <Widget>[
+            _crearListas(),
+            _crearLoading()
+        ],
+      )
+      
+      
+      
     );
   }
 
@@ -60,5 +79,49 @@ class _ListaPageState extends State<ListaPage> {
     setState(() {
       
     });
+  }
+
+  Future<Null> fetchdata() async{
+    _isLoading = true;
+    setState(() {
+      
+    });
+
+    final duration = new Duration(seconds: 2);
+    return new Timer(duration, repuestaHTTP);
+  }
+
+  void repuestaHTTP() {
+    _isLoading = false;
+    _scrollController.animateTo(
+      _scrollController.position.pixels + 100,
+      curve: Curves.fastOutSlowIn,
+      duration:  Duration(milliseconds: 250)
+    );
+    _agregar10();
+  }
+
+  Widget _crearLoading() {
+    if(_isLoading)
+    {
+      return Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CircularProgressIndicator()
+            ],
+          ),
+          SizedBox(height: 15.0)
+        ],
+      );
+      
+    }
+    else
+    {
+      return Container();
+    }
   }
 }
